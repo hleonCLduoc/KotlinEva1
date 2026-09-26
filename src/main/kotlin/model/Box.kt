@@ -1,4 +1,6 @@
 package model
 
-class Box {
-}
+class Box (
+    val numero : Int,
+    val estado : EstadoBox.Libre
+)
