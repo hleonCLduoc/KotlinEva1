@@ -1,7 +1,7 @@
+import kotlinx.coroutines.runBlocking
 import model.*
-import kotlinx.courutines.runBlocking
 
-class Main ()= runBloking {
+fun main ()= runBlocking {
     val sistema = SistemaPetCare()
 
     println("===INICIANDO TURNO EN PETCARE===")
@@ -36,8 +36,22 @@ class Main ()= runBloking {
 
     try {
         println("\n Registando salidas y calculando cobros...")
-        val cobroPerro = sistema.registrarSalida(2, 15)
-        println("Salida Box 1 (${perro1.nombre}): $$cobroPerro")    }
+        val cobroPerro = sistema.registrarSalida(1, 60)
+        println("Salida Box 1 (${perro1.nombre}): $$cobroPerro")
 
+        val cobroGato = sistema.registrarSalida(2,15)
+        println("Salida Box 2 (${gato1.nombre}): $$cobroGato")
 
+        val cobroExotico = sistema.registrarSalida(3,90)
+        println("Salida Box 3 (${exotico1.nombre}): $$cobroExotico")
+
+    }catch (e: Exception){
+        println("Error durante la salida: ${e.message}")
+    }
+    println("\n === PACIENTES CON CONVENIO ===")
+    sistema.obtenerPacientesConvenio().forEach{
+        println("- ${it.nombre}(${it.especie})")
+    }
+    println()
+    sistema.generarReporteCierre()
 }
