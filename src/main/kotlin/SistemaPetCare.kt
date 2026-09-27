@@ -47,6 +47,38 @@ class SistemaPetCare {
         }
          val paciente = estadoActual.paciente
         box.estado = EstadoBox.EnProceso("Procesando sensor de salida")
+        delay(6500)
+
+        val montoBase= paciente.calcularMontoCobro(minutosUso)
+        var montoFinal = montoBase * 1.19
+
+        if (paciente.tipoDueno.lowercase()== "municipal"){
+            montoFinal *=0.85
+
+        }
+        historial.add(RegistroAtencion(paciente, numeroBox, minutosUso,montoFinal))
+        box.estado = EstadoBox.Libre
+
+        return montoFinal
+
+}
+    fun obtenerBoxesLibres() : List<Box>{
+        return boxes.filter{it.estado is EstadoBox.Libre}
+    }
+
+    fun obtenerIngresoPromedio(): Double{
+    if (historial.isEmpty()) return 0.0
+        return historial.sumOf{it.montoFinal} / historial.size
+
+    }
+    fun generarReporteCierre(){
+        println("=== * REPORTE DE CIERRE DE TURNO * ====")
+        println("Toal Atenciones realizadas: ${historial.size}")
+        val totalRecaudado = historial.sumOf{it.montoFinal}
+        println("Monto total recaudado (Con iva/descuentos): $$totalRecaudado")
+        println("Ingreso promedio por atencion: $${obtenerIngresoPromedio()}")
+        println("Boxes actualmente libres: ${obtenerBoxesLibres().size} de 10")
+    }
 
 
 }
